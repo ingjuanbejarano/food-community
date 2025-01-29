@@ -1,12 +1,40 @@
-const MealPage = ({ params }) => {
-	const { slug } = params;
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import classes from "./page.module.css";
+import { getMeal } from "@/lib/meals";
 
-	return (
-		<div>
-			<h1>Meal: {slug}</h1>
-			{/* Add your component logic here */}
-		</div>
-	);
+const MealPage = ({ params }) => {
+  const { slug } = params;
+  const meal = getMeal(slug);
+
+  if (!meal) {
+	notFound();
+  }
+
+  return (
+    <>
+      <header className={classes.header}>
+        <div className={classes.image}>
+          <Image src={meal.image} alt={meal.title} fill />
+        </div>
+        <div className={classes.headerText}>
+          <h1>{meal.title}</h1>
+          <p className={classes.creator}>
+            by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
+          </p>
+          <p className={classes.summary}>{meal.summary}</p>
+        </div>
+      </header>
+      <main>
+        <p
+          className={classes.instructions}
+          dangerouslySetInnerHTML={{
+            __html: meal.instructions.replace(/\n/g, "<br>"),
+          }}
+        />
+      </main>
+    </>
+  );
 };
 
 export default MealPage;
