@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import classes from "./page.module.css";
 import { getMeal } from "@/lib/meals";
 
-const MealPage = ({ params }) => {
-  const { slug } = params;
+const MealPage = async ({ params }) => {
+  const { slug } = await params;
   const meal = getMeal(slug);
 
   if (!meal) {
